@@ -29,10 +29,11 @@ public class TodoListServiceImpl implements TodoListService{
         todoListRepository.add(todoList);
     }
 
-    @Override
-    public Boolean removeTodoList(final Integer number) {
-        return removeTodoList(number);
-    }
+        @Override
+        public Boolean removeTodoList(final Integer number) {
+            return todoListRepository.remove(number);
+
+        }
 
     @Override
     public Boolean editTodoList(Integer number, String todo) {

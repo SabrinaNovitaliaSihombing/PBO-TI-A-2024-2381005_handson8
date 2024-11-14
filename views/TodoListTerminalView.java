@@ -57,7 +57,7 @@ public class TodoListTerminalView  implements TodoListView {
         for (var i = 0; i < todos.length; i++) {
             var todo = todos[i];
             if (todo != null) {
-                System.out.println((i + 1) + ". " + todo);
+                System.out.println((i + 1) + ". " + todo.getTodo());
             }
         }
     }
