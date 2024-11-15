@@ -20,7 +20,7 @@ public class TodoListRepositoryDblmpl implements TodoListRepository {
     }
 
     @Override
-    public TodoList[] getAll() {
+    public TodoList[] getALL() {
         Connection connection = database.getConnection();
         String sqlStatement = "SELECT * FROM todos";
         List<TodoList> todoLists = new ArrayList<>();
@@ -43,7 +43,12 @@ public class TodoListRepositoryDblmpl implements TodoListRepository {
     }
 
     @Override
-    public void add(TodoList todoList) {
+    public TodoList[] getAll() {
+        return new TodoList[0];
+    }
+
+    @Override
+    public void add(final TodoList todoList) {
         Connection connection = database.getConnection();
         String sqlStatement = "INSERT INTO todos(todo) VALUES(?)";
 
@@ -60,7 +65,7 @@ public class TodoListRepositoryDblmpl implements TodoListRepository {
     }
 
     private Integer getDbId(final Integer id) {
-        TodoList[] todoLists = getAll();
+        TodoList[] todoLists = getALL();
         Long countElement = Arrays.stream(todoLists).filter(Objects::nonNull).count();
         if (countElement.intValue() == 0) {
             return null;
@@ -70,7 +75,7 @@ public class TodoListRepositoryDblmpl implements TodoListRepository {
     }
 
     @Override
-    public Boolean remove(Integer id) {
+    public Boolean remove(final Integer id) {
         String sqlStatement = "DELETE FROM todos WHERE id = ?";
         Connection connection = database.getConnection();
         var dbId = getDbId(id);
@@ -94,7 +99,27 @@ public class TodoListRepositoryDblmpl implements TodoListRepository {
     }
 
     @Override
-    public Boolean edit(TodoList todoList) {
-        return null;
+    public Boolean edit(final TodoList todoList) {
+        String sqlStatement = "UPDATE todos set todo = ? WHERE id = ?";
+        Connection connection = database.getConnection();
+        var dbId = getDbId(todoList.getId());
+        if (dbId == null) {
+            return false;
+        }
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlStatement);
+            preparedStatement.setString(1, todoList.getTodo());
+            preparedStatement.setInt(2, dbId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Update successful !");
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 }
