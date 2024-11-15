@@ -20,7 +20,7 @@ public class TodoListRepositoryDblmpl implements TodoListRepository {
     }
 
     @Override
-    public TodoList[] getALL() {
+    public TodoList[] getAll() {
         Connection connection = database.getConnection();
         String sqlStatement = "SELECT * FROM todos";
         List<TodoList> todoLists = new ArrayList<>();
@@ -43,11 +43,6 @@ public class TodoListRepositoryDblmpl implements TodoListRepository {
     }
 
     @Override
-    public TodoList[] getAll() {
-        return new TodoList[0];
-    }
-
-    @Override
     public void add(final TodoList todoList) {
         Connection connection = database.getConnection();
         String sqlStatement = "INSERT INTO todos(todo) VALUES(?)";
@@ -65,7 +60,7 @@ public class TodoListRepositoryDblmpl implements TodoListRepository {
     }
 
     private Integer getDbId(final Integer id) {
-        TodoList[] todoLists = getALL();
+        TodoList[] todoLists = getAll();
         Long countElement = Arrays.stream(todoLists).filter(Objects::nonNull).count();
         if (countElement.intValue() == 0) {
             return null;
